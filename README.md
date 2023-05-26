@@ -35,9 +35,16 @@ see initial quick setup at [ubuntu20](ubuntu20.md)
 * create a /etc/ansible/hosts file
 ```
 sudo vim /etc/ansible/hosts
-
 # add the hosts, one per line
 ``` 
+
+
+## copy files
+* Make sure the /etc/ansible/hosts file exists and then run 
+```
+ansible-playbook -i /etc/ansible/hosts -K copy_etcHosts.yml
+``` 
+
 
 
 
