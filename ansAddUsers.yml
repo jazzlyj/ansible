@@ -1,0 +1,34 @@
+---
+- name: Create New Users
+  hosts: all
+  remote_user: jay
+  become: true
+  gather_facts: false
+  vars_files:
+    - users_pass.yml
+    - usernames.yml
+  tasks:
+    - name: Create Users, Home Directory and add to groups 
+      user:
+        name: "{{ item }}"
+        password: "{{ user_pass | password_hash('sha512', user_salt) }}"
+        shell: /bin/bash
+        system: no
+        state: present
+        createhome: yes
+        groups: 
+        append: yes
+        home: "/home/{{ item }}"
+        generate_ssh_key: yes
+        ssh_key_bits: 2048
+        ssh_key_file: .ssh/id_rsa
+        update_password: on_create
+      with_items:
+        - "{{ names }}"
+      register: user_status
+ 
+    - name:
+      shell: chage -d 0 "{{ item }}"
+      with_items:
+        - "{{ names }}"
+      when: user_status.changed

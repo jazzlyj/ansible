@@ -1,0 +1,25 @@
+# To get the architecture of the system at the command line:
+# ansible HOST -m setup -a 'filter=ansible_architecture'
+
+# For an x86 architecture host, this would return:
+
+# HOST | SUCCESS => {
+#     "ansible_facts": {
+#         "ansible_architecture": "x86_64"
+#     }, 
+#     "changed": false
+# }
+
+# Here’s a sample playbook that will print out the architecture of all hosts in your inventory:
+
+- name: print out hosts architectures
+  hosts: all
+  gather_facts: True
+  tasks:
+  - debug: var= ansible_architecture
+
+# To run tasks based off the architecture use a when clause:
+
+- name: task to run for x86 architecture
+  shell: echo "x86 arch found here"
+  when: ansible_architecture == "x86_64"
